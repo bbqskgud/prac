@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+   <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+<div th:replace="layout/header::header"></div>
+<div class="container">
+
+        <div class="page-header">
+            <h1>게시글 목록</h1>
+            <h3><span>'[[${username?.username}]]'님 안녕하세요.</span></h3>
+        </div>
+        
+        <br>
+        
+         <div id="search">   
+                        <button type="button" class="btn btn-primary" id="searchbtn" style="float: right;">검색</button>    
+            <input id="text_search" type="text"placeholder="제목을 입력하세요." name="searchText" maxlength="100" style="float: right;">
+
+         </div>
+         <br>
+         <br> 
+        <!-- <form action="/board/search" method="get" >
+        	<div class="search"> 
+        		<input name="keyword" id="keyword" type="text" placeholder="제목을 입력하세요.">
+        		<button type="button" id="search_btn">검색</button>
+        	</div>
+       </form> -->
+        
+        <div class="pull-right" style="width:100px;margin:10px 0;">
+        	<a href="/board/form" class="btn btn-primary btn-block">등록</a>
+        </div>
+
+        
+        <br>
+        <br> 
+        <br>
+     <div id="sn">
+        <div id="mainHide">
+        	<table class="table table-hover">
+        		<thead>
+        			<tr>
+        				<th scope="col">#</th>
+        				<th scope="col">서비스분류</th>
+        				<th scope="col">작성자</th>
+        				<th scope="col">제목</th>
+        				<th scope="col">부제목</th>
+        				<th scope="col">작성일</th>
+        				
+        			</tr>
+        		</thead>
+        		<tbody>
+        			<tr th:each="board:${boardList}">
+        				<td th:text="${board.id}"></td>
+        				<td th:text="${board.boardType.value}"></td>
+        				<td th:text="${board.username.username}"></td>
+        				<td><a th:href="'/board/view?id='+${board.id}" th:text="${board.title}"></a></td>
+        				<!-- 링크의 주소를 절대경로를 넣어서 보는 페이지로 연결되게한다. -->
+        				<td th:text="${board.subTitle}"></td>
+        				<td th:text="${board.wdate}"></td>
+        				
+        			</tr>
+        		</tbody>
+        	</table>
+        </div>
+        
+        <br>
+        <!-- 페이지 네비게이션 -->
+        <nav style="text-align:center;">
+        	<ul class="pagination" 
+        	th:with="startNumber=${T(java.lang.Math).floor(boardList.number/5)}*5+1,
+        	endNumber=(${boardList.totalPages})>${startNumber}+4?${startNumber}+4:${boardList.totalPages}">
+        		<li th:style="${boardList.first}?'display:none'">
+		   			<a th:href="@{/board/list(page=${boardList.number})}">&lsaquo;</a>
+		   		</li>
+		   		
+		   		<li th:each="page:${#numbers.sequence(startNumber,endNumber)}"
+		   		th:class="(${page}==${boardList.number}+1)?'active'">
+		   			<a th:href="@{/board/list(page=${page})}" th:text="${page}"></a>
+		   		</li>
+		   		
+		   		<li th:style="${boardList.last}?'display:none'">
+		   			<a th:href="@{/board/list(page=${boardList.number}+2)}">&rsaquo;</a>
+		   		</li>
+		   		
+		   		<li><a th:href="@{/board/list(page=${boardList.totalPages})}">&raquo;</a></li>
+        	</ul>
+        </nav>
+      </div>
+</div>
+
+
+<div th:replace="layout/footer::footer"></div>
+   <script th:src="@{/js/jquery.min.js}"></script>
+   <script th:if="!${board?.id}">
+      $('#searchbtn').click(function() {
+         var keyword = $('#text_search').val();
+
+         $.ajax({
+            url : "/board/search",
+            type : "get", // get방식, json으로 하면 오류 json,parse에러
+            data : {
+            	keyword : keyword
+            },
+            success : function(data) {
+               $('#sn').html(data)
+            }
+         })
+      });
+
+   </script>
+</body>
+</html>
+ 
+
+

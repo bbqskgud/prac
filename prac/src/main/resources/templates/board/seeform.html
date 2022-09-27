@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Board Form</title>
+    <link rel="stylesheet" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+        <script th:src="@{/js/jquery.min.js}"></script>
+        <style>
+	         pre {
+	        word-wrap: break-word;
+	      }
+        </style>
+</head>
+<body>
+<div th:hidden="${user}"></div>
+    <div th:replace="layout/header::header"></div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>게시글 등록</h1>
+        </div>
+        <br/>
+        <input id="board_idx" type="hidden" th:value="${board?.id}"/>
+        <input id="board_wdate" type="hidden" th:value="${board?.wdate}"/>
+        <table class="table">
+            <tr>
+                <th style="padding:13px 0 0 15px">게시판 선택</th>
+                <td>
+                    <div class="pull-left">
+                        <span>[[${board?.boardType?.value}]]</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th style="padding:13px 0 0 15px;">생성날짜</th>
+                <td> <span>[[${board?.wdate}]]</span></td>
+
+            </tr>
+            <tr>
+                <th style="padding:13px 0 0 15px;">작성자</th>
+                <td> <span>[[${board?.username?.username}]]</span></td>
+
+            </tr>
+            <tr>
+                <th style="padding:13px 0 0 15px;">제목</th>
+                <td> <span>[[${board?.title}]]</span></td>
+            </tr>
+            <tr>
+                <th style="padding:13px 0 0 15px;">부제목</th>
+                <td><span>[[${board?.subTitle}]]</span></td>
+            </tr>
+            <tr>
+                <th style="padding:13px 0 0 15px;">내용</th>
+                <td><pre><span>[[${board?.content}]]</span></pre></td>
+            </tr>
+           
+        </table>
+        <div class="pull-left">
+            <a href="/board/list" class="btn btn-default">목록으로</a>
+        </div>
+        <div class="pull-right">
+            <button th:if="${board?.username?.username==username?.username}"
+             class="btn btn-info" type="button" id="ud" >수정 및 삭제</button>
+        </div>
+    </div>
+	
+	<div>
+
+	</div>
+	
+	
+    <div th:replace="layout/footer::footer"></div>
+<script th:if="${board?.username}">
+		$( document ).ready(function() {
+			$('#ud').click(function () {				
+	        	var data=$('#board_idx').val();	   
+	        	location.href="http://localhost:8883/board/test?id="+data;
+	        })
+		}); 
+</script> 
+</body>
+     
+</html>
